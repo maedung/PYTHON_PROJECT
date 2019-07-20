@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+    h1, .head a{
+        display: inline-block;
+    }
+    .logout{
+        margin-left: 500px;
+    }
+    .newjob{
+        border: 2px solid black;
+        box-shadow: 2px 2px black;
+        width: 100px;
+        text-align: center;
+        color: black;
+    }
+    </style>
+    
+</head>
+<body>
+    <div class='head'>
+        <h1>Hello {{user.first_name}}!</h1>
+        <a class="logout" href="/">Logout</a>
+        <a class="newjob" href="/jobs/new">New Job!</a>
+    </div>
+    <p>Everyone's jobs:</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Job</th>
+                <th scope="col">Location</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{job.title}}</td>
+                <td>{{job.location}}</td>
+                <td>
+                    <a href="/job/{{job.id}}">View</a>
+                    <a href="/job_delete/{{job.id}}">Remove</a>
+                    <a href="/edit/{{job.id}}">Edit</a>
+                    <a href="">Add</a>
+                </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    <p>{{user.first_name}}'s jobs</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Job</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{user.jobs.all}}</td>
+                <td>
+                    <a href="/job/{{job.id}}">View</a>
+                    <a href="/job_delete/{{job.id}}">Remove</a>
+                    <a href="/edit/{{job.id}}">Edit</a>
+                    <a href="">Add</a>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+</body>
+</html>

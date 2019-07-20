@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/">Logout</a>
+    <h1>Hello {{user.first_name}}! These are the job details!</h1>
+    <h3>{{job.title}}</h3>
+    <div style="border: 2px solid black; width:400px;">
+        <p>{{job.desc}}</p>
+        <p>{{job.location}}</p>
+        <p>{{this_job}}</p>
+        <p>{{job.created_at}}</p>
+
+        <p>Categories: {{this_job.title}}</p>
+    </div>
+
+    <a href="">Add to my jobs</a>
+</body>
+</html>

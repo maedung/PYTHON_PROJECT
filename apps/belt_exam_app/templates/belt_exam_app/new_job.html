@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+    li{
+        color: red;
+    }
+    .just_box{
+        border: 2px solid black;
+        width:500px;
+        padding:20px;
+    }
+    .cancel{
+        margin-left:120px;
+        color:black;
+        background-color:white;
+        border: 1px solid black;
+        padding: 2px 10px;
+        box-shadow: 2px 2px black;
+    }
+    .click{
+        background-color:white;
+        border: 1px solid black;
+        box-shadow: 2px 2px black;
+    }
+
+    </style>
+</head>
+<body>
+    <a href="/">Logout</a>
+    <h1>Hello {{user.first_name}}! Create a job!</h1>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="just_box">
+        <form action="/create_job" method="POST">
+            {% csrf_token %}
+            <div class="form-group row">
+                <label class="col-sm-3">Title:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="new_title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3">Description:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="new_desc">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3">Location:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="new_location">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3">Category:</label>
+                <div class="col-sm-8">
+                    {% for category in categories %}
+                        <input type="checkbox" name="{{category.id}}" value="{{category.id}}">{{category.title}}<br>
+                    {% endfor %}
+                </div>
+                
+                <label class="col-sm-3">Other:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="other">
+                </div>
+            </div>
+
+            <a class="cancel" href="/dashboard">Cancel</a>
+            <input class="click" type="submit" value="Submit!">
+
+        </form>
+    </div>
+</body>
+</html>

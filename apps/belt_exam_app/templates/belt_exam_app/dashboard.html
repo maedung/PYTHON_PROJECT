@@ -41,16 +41,20 @@
         </thead>
         <tbody>
             {% for job in jobs %}
+            {% if not job.users.all.exists == True %}
             <tr>
                 <td>{{job.title}}</td>
                 <td>{{job.location}}</td>
                 <td>
                     <a href="/job/{{job.id}}">View</a>
+                    {% if user.id == job.post_by.id %}
                     <a href="/job_delete/{{job.id}}">Remove</a>
                     <a href="/edit/{{job.id}}">Edit</a>
-                    <a href="">Add</a>
+                    {% endif %}
+                    <a href="/job_add_to_user/{{job.id}}">Add</a>
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
             
         </tbody>
@@ -64,16 +68,16 @@
             </tr>
         </thead>
         <tbody>
+            {% for i in user.has_jobs.all %}
             <tr>
-                <td>{{user.jobs.all}}</td>
+                <td>{{i.title}}</td>
                 <td>
-                    <a href="/job/{{job.id}}">View</a>
-                    <a href="/job_delete/{{job.id}}">Remove</a>
-                    <a href="/edit/{{job.id}}">Edit</a>
-                    <a href="">Add</a>
+                    <a href="/job/{{i.id}}">View</a>
+                    <a href="/job_delete/{{i.id}}">Done</a>
+                    <a href="/job_del_from_user/{{i.id}}">Give up</a>
                 </td>
             </tr>
-            
+            {% endfor %}
         </tbody>
     </table>
 

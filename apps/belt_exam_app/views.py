@@ -92,12 +92,11 @@ def new_job(request):
     if not 'user' in request.session:
         messages.error(request, "Log In First")
         return redirect('/') 
+
     else:
         this_user = User.objects.get(id = request.session['user'])
-        all_categories = Category.objects.all()
         context = {
             'user': this_user,
-            'categories': all_categories,
         }
 
         return render(request,'belt_exam_app/new_job.html',context)
@@ -119,6 +118,9 @@ def create_job(request):
         if Job.objects.filter(title=request.POST['new_title']).exists()==True:
             messages.error(request, "This Job Name is already exist!")
             is_valid = False
+        if 'category1' not in request.POST and 'category2' not in request.POST and 'category3' not in request.POST and int(len(request.POST['other']) < 1):
+            messages.error(request, "Add at least one category")
+            is_valid = False
 
         if not is_valid:
             return redirect('/jobs/new')
@@ -126,31 +128,27 @@ def create_job(request):
             new_title = request.POST['new_title']
             new_desc = request.POST['new_desc']
             new_location = request.POST['new_location']
-            new_job = Job.objects.create(title = new_title, desc = new_desc, location = new_location)
+            new_category = []
 
+            if 'category1' in request.POST:
+                new_category.append(request.POST['category1'])
+            if 'category2' in request.POST:
+                new_category.append(request.POST['category2'])
+            if 'category3' in request.POST:
+                new_category.append(request.POST['category3'])
             if len(request.POST['other']) > 0:
-                if Category.objects.create(title = request.POST['other']).exists() == True:
-                    new_category = Category.objects.get(title = request.POST['other'])
-                    new_job.categories.add(new_category)
-                else:
-                    new_category = Category.objects.create(title = request.POST['other'])
-                    new_job.categories.add(new_category)
-                    
-            # cat = Category.objects.last()
-            # for i in range(cat.id):        
-            #     if checkbox (i) is checked:
-            #         new_category = Category.objects.get(id = i)
-            #         new_job.categories.add(new_category)
-
-
-
+                new_category.append(request.POST['other'])
+            this_user = User.objects.get(id = request.session['user'])
+            new_job = Job.objects.create(title = new_title, desc = new_desc, location = new_location, category = list(new_category) ,post_by = this_user)
             return redirect('/dashboard')
 
+############ Job Delete ##############
 def job_delete(request, id):
     this_job = Job.objects.get(id = id)
     this_job.delete()
     return redirect('/dashboard')
 
+############Job Info #################
 def job_info(request, id):
     if not 'user' in request.session:
         messages.error(request, "Log In First")
@@ -158,14 +156,13 @@ def job_info(request, id):
     else:
         job_info = Job.objects.get(id = id)
         user = User.objects.get(id = request.session['user'])
-        this_job = job_info.categories.all().values()
         context = {
             'job': job_info,
             'user': user,
-            "this_job": this_job
         }
         return render(request, 'belt_exam_app/job_info.html', context)
 
+#########Job Edit Page ####################
 def edit_job(request, id):
     if not 'user' in request.session:
         messages.error(request, "Log In First")
@@ -180,6 +177,7 @@ def edit_job(request, id):
         }
         return render(request, 'belt_exam_app/edit.html', context)
 
+############ Edit Process #########
 def edit_process(request):
     if request.method == 'POST':
         is_valid = True
@@ -210,3 +208,18 @@ def edit_process(request):
             this_job.location = edit_location
             this_job.save()
             return redirect('/dashboard')
+
+
+############ User add job process ###########
+def job_add_to_user(request,id):
+    user = User.objects.get(id = request.session['user'])
+    this_job = Job.objects.get(id = id)
+    this_job.users.add(user)
+    return redirect('/dashboard')
+
+########### User delete job process ###########
+def job_delete_from_user(request,id):
+    user = User.objects.get(id = request.session['user'])
+    this_job = Job.objects.get(id = id)
+    this_job.users.remove(user)
+    return redirect('/dashboard')

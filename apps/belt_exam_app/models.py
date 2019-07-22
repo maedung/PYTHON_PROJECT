@@ -10,14 +10,10 @@ class User(models.Model):
 
 class Job(models.Model):
     title = models.CharField(max_length = 255)
-    users = models.ManyToManyField(User, related_name="jobs")
+    users = models.ManyToManyField(User, related_name="has_jobs")
+    post_by = models.ForeignKey(User, related_name='posted')
     desc = models.TextField()
+    category = models.CharField(max_length = 255)
     location = models.CharField(max_length = 255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
-
-class Category(models.Model):
-    title = models.CharField(max_length = 255)
-    jobs = models.ManyToManyField(Job, related_name='categories')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
